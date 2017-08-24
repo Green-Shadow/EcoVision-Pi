@@ -11,10 +11,10 @@ import org.json.JSONObject;
 public class Main {
 
 	public static void main(String[] args) {
-		
-
+		String res = JSONParse(pushToWatson(new File("src/test/resources/visual_recognition/car.png")));
+		System.out.println(res);
 	}
-	 public String pushToWatson (File data){
+	 private static String pushToWatson (File data){
 	        VisualRecognition service = new VisualRecognition(VisualRecognition.VERSION_DATE_2016_05_20);
 	        service.setApiKey("145b047be11f5059687578f4ca85325d23e0cdf8");
 
@@ -27,7 +27,7 @@ public class Main {
 	        VisualClassification result = service.classify(options).execute();
 	        return result.toString();
 	   }
-	 private String JSONParse (String JSON) throws JSONException {
+	 private static String JSONParse (String JSON) throws JSONException {
 	        JSONObject watson=null;
 	        double highestScore=0.0;
 	        String wasteType=null;

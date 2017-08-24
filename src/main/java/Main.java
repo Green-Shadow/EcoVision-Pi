@@ -11,7 +11,7 @@ import org.json.JSONObject;
 public class Main {
 
 	public static void main(String[] args) {
-		String res = JSONParse(pushToWatson(new File("src/test/resources/visual_recognition/car.png")));
+		String res = JSONParse(pushToWatson(new File("/projects/EcoVisionPi/test.jpg")));
 		System.out.println(res);
 	}
 	 private static String pushToWatson (File data){

@@ -22,11 +22,13 @@ repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     compile group: 'org.json', name: 'json', version: '20170516'
     compile 'com.ibm.watson.developer_cloud:visual-recognition:3.8.0'
-
+    compile group: 'com.pi4j', name: 'pi4j-core', version: '0.0.5'
+    compile 'com.github.Hopding:JRPICam:v1.1.1'
 }
 

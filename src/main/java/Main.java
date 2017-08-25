@@ -3,16 +3,39 @@ import com.ibm.watson.developer_cloud.visual_recognition.v3.model.ClassifyImages
 import com.ibm.watson.developer_cloud.visual_recognition.v3.model.VisualClassification;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Main {
+import com.hopding.jrpicam.RPiCamera;
+import com.hopding.jrpicam.exceptions.FailedToRunRaspistillException;
 
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.RaspiPin;
+
+public class Main {      
 	public static void main(String[] args) {
-		String res = JSONParse(pushToWatson(new File("/projects/EcoVisionPi/test.jpg")));
+	    String res = "" ;
+	    final GpioController gpio = GpioFactory.getInstance();
+	    final GpioPinDigitalOutput bioLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
+        final GpioPinDigitalOutput recyLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02);
+        final GpioPinDigitalOutput toxicLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03);
+	    try{
+	        RPiCamera piCamera = new RPiCamera("./Pictures");
+	        piCamera.setToDefaults();
+		    res = JSONParse(pushToWatson(piCamera.takeStill(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ").format(new Date()))));
+	    }
+	    catch(Exception e){e.printStackTrace();}
 		System.out.println(res);
+		if(res=="Biodegradable"){bioLed.high();}
+		else if(res=="Recyclable"){recyLed.high();}
+		else if(res=="Toxic"){toxicLed.high();}
 	}
 	 private static String pushToWatson (File data){
 	        VisualRecognition service = new VisualRecognition(VisualRecognition.VERSION_DATE_2016_05_20);

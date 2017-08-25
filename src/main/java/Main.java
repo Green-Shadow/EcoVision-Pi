@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+//The code will not run as it is not on a Pi. TODO:Add validation to check if running on P
 import com.hopding.jrpicam.RPiCamera;
 import com.hopding.jrpicam.exceptions.FailedToRunRaspistillException;
 
@@ -21,7 +22,7 @@ import com.pi4j.io.gpio.RaspiPin;
 
 public class Main {      
 	public static void main(String[] args) {
-	    String res = "" ;
+	    String res = "";
 	    final GpioController gpio = GpioFactory.getInstance();
 	    final GpioPinDigitalOutput bioLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
         final GpioPinDigitalOutput recyLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02);

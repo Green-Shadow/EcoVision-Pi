@@ -5,12 +5,21 @@ import com.ibm.watson.developer_cloud.visual_recognition.v3.model.VisualClassifi
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.io.IOException;
+import java.awt.image.BufferedImage;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import javax.imageio.*;
+import javax.imageio.stream.ImageOutputStream;
+import java.util.Iterator;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-//The code will not run as it is not on a Pi. TODO:Add validation to check if running on P
+
+//The code will not run as it is not on a Pi. TODO:Add validation to check if running on Pi
 import com.hopding.jrpicam.RPiCamera;
 import com.hopding.jrpicam.exceptions.FailedToRunRaspistillException;
 
@@ -20,7 +29,7 @@ import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.RaspiPin;
 
-public class Main {      
+public class Main {
 	public static void main(String[] args) {
 	    String res = "";
 	    final GpioController gpio = GpioFactory.getInstance();
@@ -30,7 +39,7 @@ public class Main {
 	    try{
 	        RPiCamera piCamera = new RPiCamera("./Pictures");
 	        piCamera.setToDefaults();
-		    res = JSONParse(pushToWatson(piCamera.takeStill(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ").format(new Date()))));
+		    res = JSONParse(pushToWatson(compress(piCamera.takeStill(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ").format(new Date())))));
 	    }
 	    catch(Exception e){e.printStackTrace();}
 		System.out.println(res);
@@ -78,6 +87,28 @@ public class Main {
 	            }
 	        };
 	    return wasteType;    
-	 } 
+	 }
+	 private static File compress(File uncon) throws IOException{
+          //File input = new File("digital_image_processing.jpg");
+          BufferedImage image = ImageIO.read(uncon);
+
+          File compressedImage = null; 
+          OutputStream os = new FileOutputStream(compressedImage);
+
+          Iterator<ImageWriter>writers = ImageIO.getImageWritersByFormatName("jpg");
+          ImageWriter writer = (ImageWriter) writers.next();
+
+          ImageOutputStream ios = ImageIO.createImageOutputStream(os);
+          writer.setOutput(ios);
+
+          ImageWriteParam param = writer.getDefaultWriteParam();
+          // Check if canWriteCompressed is true
+          if(param.canWriteCompressed()) {
+              param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+              param.setCompressionQuality(0.05f);
+         }
+        writer.write(null, new IIOImage(image, null, null), param);
+        return compressedImage;
+    }
 
 }

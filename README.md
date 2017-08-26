@@ -1,2 +1,2 @@
 # EcoVisionPi
-A port of the EcoVision app to rum on a Raspberry Pi
+A port of the EcoVision app to run on a Raspberry Pi

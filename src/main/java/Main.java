@@ -34,12 +34,12 @@ public class Main {
 	    String res = "";
 	    final GpioController gpio = GpioFactory.getInstance();
 	    final GpioPinDigitalOutput bioLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
-        final GpioPinDigitalOutput recyLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02);
-        final GpioPinDigitalOutput toxicLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03);
+            final GpioPinDigitalOutput recyLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02);
+    	    final GpioPinDigitalOutput toxicLed = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03);
 	    try{
 	        RPiCamera piCamera = new RPiCamera("./Pictures");
 	        piCamera.setToDefaults();
-		    res = JSONParse(pushToWatson(compress(piCamera.takeStill(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ").format(new Date())))));
+		res = JSONParse(pushToWatson(compress(piCamera.takeStill(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ").format(new Date())))));
 	    }
 	    catch(Exception e){e.printStackTrace();}
 		System.out.println(res);
